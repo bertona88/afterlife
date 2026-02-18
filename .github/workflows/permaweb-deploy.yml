@@ -29,9 +29,8 @@ jobs:
         run: pnpm build
 
       - name: Deploy to Permaweb
-        uses: permaweb/permaweb-deploy@v1
+        uses: permaweb/permaweb-deploy@v3
         with:
           deploy-key: ${{ secrets.DEPLOY_KEY }}
           arns-name: ${{ vars.ARNS_NAME }}
           deploy-folder: dist
-
