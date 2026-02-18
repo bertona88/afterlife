@@ -1,0 +1,4 @@
+interface:
+  display_name: "Arweave Turbo Save"
+  short_description: "Upload files to Arweave via Turbo with zero-fund-first policy"
+  default_prompt: "Use $arweave-turbo-save to upload this file to Arweave with free-first mode and no paid fallback."

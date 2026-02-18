@@ -1,0 +1,16 @@
+{
+  "name": "arweave-turbo-save-skill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "save": "node scripts/save.mjs",
+    "check": "node --check scripts/save.mjs"
+  },
+  "dependencies": {
+    "@ardrive/turbo-sdk": "^1.40.2",
+    "arweave": "^1.15.7",
+    "dotenv": "^17.2.3",
+    "mime-types": "^3.0.2"
+  }
+}

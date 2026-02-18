@@ -1,0 +1,4 @@
+interface:
+  display_name: "Arweave Turbo Fetch"
+  short_description: "Fetch Arweave files by tx id or tags with integrity checks"
+  default_prompt: "Use $arweave-turbo-fetch to retrieve this Arweave file and validate integrity."

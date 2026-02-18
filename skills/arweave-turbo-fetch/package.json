@@ -1,0 +1,13 @@
+{
+  "name": "arweave-turbo-fetch-skill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch": "node scripts/fetch.mjs",
+    "check": "node --check scripts/fetch.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}

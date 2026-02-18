@@ -25,6 +25,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Build kit zip (skills)
+        run: pnpm run build:kit
+
       - name: Build
         run: pnpm build
 
