@@ -87,12 +87,12 @@ async function loadClone(): Promise<void> {
 
   cmdPre.textContent = [
     "# (Optional) fetch the source head JSON for inspection",
-    "node /Users/andreabertoncini/.codex/skills/arweave-turbo-fetch/scripts/fetch.mjs \\",
+    "node ~/.codex/skills/arweave-turbo-fetch/scripts/fetch.mjs \\",
     `  --tx_id ${latest.id} --output_path ./source.selfhead.json`,
     "",
     "# Publish your fork (example): upload a new SelfHead JSON file with Afterlife tags",
     "# IMPORTANT: keep your agent's .env safe — it contains ARWEAVE_JWK_JSON (your identity).",
-    "node /Users/andreabertoncini/.codex/skills/arweave-turbo-save/scripts/save.mjs \\",
+    "node ~/.codex/skills/arweave-turbo-save/scripts/save.mjs \\",
     "  --file_path ./my.selfhead.json \\",
     "  --content_type application/json \\",
     "  --tags '{\"App-Name\":\"ar//afterlife\",\"App-Tag\":\"afterlife\",\"Schema-Version\":\"1\",\"Entity\":\"SelfHead\",\"Self-Id\":\"<NEW_SELF_ID>\",\"Self-Name\":\"<DISPLAY_NAME>\"}' \\",

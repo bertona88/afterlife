@@ -13,11 +13,11 @@ const namespaceTagsHtml = `
 
 const commandsHtml = `
 # Fetch a tx by id
-node /Users/andreabertoncini/.codex/skills/arweave-turbo-fetch/scripts/fetch.mjs \\
+node ~/.codex/skills/arweave-turbo-fetch/scripts/fetch.mjs \\
   --tx_id &lt;TRANSACTION_ID&gt; --output_path ./downloaded.json
 
 # Save a JSON file as a SelfHead (tags-only indexing)
-node /Users/andreabertoncini/.codex/skills/arweave-turbo-save/scripts/save.mjs \\
+node ~/.codex/skills/arweave-turbo-save/scripts/save.mjs \\
   --file_path ./selfhead.json \\
   --content_type application/json \\
   --tags '{&quot;App-Name&quot;:&quot;ar//afterlife&quot;,&quot;App-Tag&quot;:&quot;afterlife&quot;,&quot;Schema-Version&quot;:&quot;1&quot;,&quot;Entity&quot;:&quot;SelfHead&quot;,&quot;Self-Id&quot;:&quot;&amp;lt;SELF_ID&amp;gt;&quot;,&quot;Self-Name&quot;:&quot;&amp;lt;DISPLAY_NAME&amp;gt;&quot;}' \\
@@ -77,4 +77,3 @@ node /Users/andreabertoncini/.codex/skills/arweave-turbo-save/scripts/save.mjs \
     </section>
   </div>
 </Base>
-
