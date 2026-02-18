@@ -69,6 +69,7 @@ export function getEnv(config = {}) {
   const turboApiUrl = (process.env.TURBO_API_URL ?? "").trim();
   const turboUploadUrl = (process.env.TURBO_UPLOAD_URL ?? "").trim();
   const turboPaymentUrl = (process.env.TURBO_PAYMENT_URL ?? "").trim();
+  const turboToken = (process.env.TURBO_TOKEN ?? "").trim() || "arweave";
 
   const normalizeUrl = (u) => (u ? String(u).trim().replace(/\/$/, "") : "");
 
@@ -116,6 +117,7 @@ export function getEnv(config = {}) {
     turboUploadUrl: normalizeUrl(resolvedUploadUrl),
     turboPaymentUrl: normalizeUrl(resolvedPaymentUrl),
     turboUrl: normalizeUrl(turboApiUrl || resolvedUploadUrl),
+    turboToken,
     indexMode: process.env.ARWEAVE_INDEX_MODE ?? "tags-only",
     jwkJson: process.env.ARWEAVE_JWK_JSON
   };

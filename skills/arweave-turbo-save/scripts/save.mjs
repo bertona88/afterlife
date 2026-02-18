@@ -245,15 +245,15 @@ async function run() {
   }
 
   const unauthenticated = TurboFactory.unauthenticated({
+    token: env.turboToken,
     uploadServiceConfig: { url: env.turboUploadUrl },
     paymentServiceConfig: { url: env.turboPaymentUrl }
   });
 
-  const authenticated = TurboFactory.authenticated({
-    privateKey: jwk,
-    uploadServiceConfig: { url: env.turboUploadUrl },
-    paymentServiceConfig: { url: env.turboPaymentUrl }
-  });
+  // Only create an authenticated client if we actually need signed fallback.
+  // Some tokens (e.g. base-usdc) require EVM-style keys; creating an authenticated
+  // client eagerly would fail even when we only intend to use unauthenticated x402.
+  let authenticated = null;
 
   const quote = await getWincQuote(unauthenticated, selected.buffer.length);
   const freeEligible = isZeroCost(quote.winc);
@@ -263,29 +263,43 @@ async function run() {
   const attempts = [];
 
   if (mode === "auto" || mode === "x402_raw_free") {
-    if (freeEligible) {
-      try {
-        uploadResponse = await uploadRawFree({
-          turbo: unauthenticated,
-          payload: selected.buffer,
-          contentType,
-          tags
-        });
-        uploadMode = "x402_raw_free";
-        attempts.push({ mode: "x402_raw_free", status: "ok" });
-      } catch (error) {
-        attempts.push({ mode: "x402_raw_free", status: "failed", error: sanitize(error.message) });
-      }
-    } else {
+    // Free-first: Always try the x402 raw path for <= max free size, even if the
+    // quote endpoint reports a non-zero winc. Some environments return non-zero quotes
+    // while still allowing a free x402 upload; we only treat it as non-free if upload fails.
+    try {
+      uploadResponse = await uploadRawFree({
+        turbo: unauthenticated,
+        payload: selected.buffer,
+        contentType,
+        tags
+      });
+      uploadMode = "x402_raw_free";
       attempts.push({
         mode: "x402_raw_free",
-        status: "skipped",
-        reason: `Quote not free (winc=${quote.winc ?? "unknown"})`
+        status: "ok",
+        free_quote_winc: quote.winc ?? null,
+        free_quote_free_eligible: freeEligible
+      });
+    } catch (error) {
+      attempts.push({
+        mode: "x402_raw_free",
+        status: "failed",
+        free_quote_winc: quote.winc ?? null,
+        free_quote_free_eligible: freeEligible,
+        error: sanitize(error.message)
       });
     }
   }
 
   if (!uploadResponse && (mode === "auto" || mode === "signed_data_item")) {
+    if (!authenticated) {
+      authenticated = TurboFactory.authenticated({
+        privateKey: jwk,
+        token: env.turboToken,
+        uploadServiceConfig: { url: env.turboUploadUrl },
+        paymentServiceConfig: { url: env.turboPaymentUrl }
+      });
+    }
     const signedQuote = await getWincQuote(authenticated, selected.buffer.length);
     if (!isZeroCost(signedQuote.winc)) {
       errOut("Signed fallback requires payment; refusing by policy.", {

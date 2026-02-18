@@ -19,6 +19,7 @@ Use this skill when the user asks to upload or persist files on Arweave with Tur
 
 - `TURBO_UPLOAD_URL` (defaults to `https://upload.ardrive.io`)
 - `TURBO_PAYMENT_URL` (defaults to `https://payment.ardrive.io`)
+- `TURBO_TOKEN` (defaults to `arweave`; `base-usdc` enables x402 raw uploads)
 - `ARWEAVE_JWK_JSON` (auto-generated if missing)
 
 Optional:
@@ -34,7 +35,7 @@ Back-compat:
 ## Install
 
 ```bash
-cd ~/.codex/skills/arweave-turbo-save
+cd /Users/andreabertoncini/.codex/skills/arweave-turbo-save
 npm install
 ```
 
