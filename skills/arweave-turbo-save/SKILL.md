@@ -17,7 +17,8 @@ Use this skill when the user asks to upload or persist files on Arweave with Tur
 
 ## Required Environment
 
-- `TURBO_API_URL`
+- `TURBO_UPLOAD_URL` (defaults to `https://upload.ardrive.io`)
+- `TURBO_PAYMENT_URL` (defaults to `https://payment.ardrive.io`)
 - `ARWEAVE_JWK_JSON` (auto-generated if missing)
 
 Optional:
@@ -26,6 +27,9 @@ Optional:
 - `ARWEAVE_MAX_FREE_BYTES` (default `102400`)
 - `ARWEAVE_INDEX_MODE` (must be `tags-only`)
 - `ARWEAVE_ENV_FILE` (fallback env file path)
+
+Back-compat:
+- `TURBO_API_URL` is still accepted, but Turbo uses separate upload + payment services; prefer the split vars.
 
 ## Install
 

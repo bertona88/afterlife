@@ -169,8 +169,14 @@ async function run() {
     process.exit(1);
   }
 
-  if (!env.turboUrl) {
-    errOut("Missing TURBO_API_URL in environment");
+  if (!env.turboUploadUrl || !env.turboPaymentUrl) {
+    errOut("Missing Turbo service URLs in environment", {
+      expected_env: ["TURBO_UPLOAD_URL", "TURBO_PAYMENT_URL"],
+      received: {
+        TURBO_UPLOAD_URL: env.turboUploadUrl ? "<set>" : "<missing>",
+        TURBO_PAYMENT_URL: env.turboPaymentUrl ? "<set>" : "<missing>"
+      }
+    });
     process.exit(1);
   }
 
@@ -239,14 +245,14 @@ async function run() {
   }
 
   const unauthenticated = TurboFactory.unauthenticated({
-    uploadServiceConfig: { url: env.turboUrl },
-    paymentServiceConfig: { url: env.turboUrl }
+    uploadServiceConfig: { url: env.turboUploadUrl },
+    paymentServiceConfig: { url: env.turboPaymentUrl }
   });
 
   const authenticated = TurboFactory.authenticated({
     privateKey: jwk,
-    uploadServiceConfig: { url: env.turboUrl },
-    paymentServiceConfig: { url: env.turboUrl }
+    uploadServiceConfig: { url: env.turboUploadUrl },
+    paymentServiceConfig: { url: env.turboPaymentUrl }
   });
 
   const quote = await getWincQuote(unauthenticated, selected.buffer.length);
