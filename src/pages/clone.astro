@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Clone" description="Clone a self by downloading a fork template (no login).">
+  <section class="hero">
+    <h1 style="font-size:34px;">Clone</h1>
+    <p>
+      Provide <code>?id=&lt;Self-Id&gt;</code>. This page never uploads; it only downloads a <code>self.json</code> template.
+    </p>
+  </section>
+  <div id="status" class="muted" style="margin-top:16px;"></div>
+  <div class="grid" style="margin-top:12px;">
+    <div class="card half">
+      <h3 style="margin:0 0 10px;">Fork template</h3>
+      <button id="download" class="btn primary">Download self.json</button>
+      <pre id="template"></pre>
+    </div>
+    <div class="card half">
+      <h3 style="margin:0 0 10px;">Publish commands</h3>
+      <div class="muted" style="font-size:13px;line-height:1.6;">
+        Copy-paste examples using your local skills. Keep your agent wallet safe: <code>ARWEAVE_JWK_JSON</code> lives in the agent <code>.env</code>.
+      </div>
+      <pre id="commands"></pre>
+    </div>
+  </div>
+  <script>
+    import "../scripts/clone.ts";
+  </script>
+</Base>
+

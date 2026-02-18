@@ -1,0 +1,37 @@
+name: Deploy (Permaweb)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to Permaweb
+        uses: permaweb/permaweb-deploy@v1
+        with:
+          deploy-key: ${{ secrets.DEPLOY_KEY }}
+          arns-name: ${{ vars.ARNS_NAME }}
+          deploy-folder: dist
+

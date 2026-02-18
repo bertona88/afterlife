@@ -1,0 +1,63 @@
+---
+import Base from "../layouts/Base.astro";
+
+const schemasHtml = `
+// SelfHead: afterlife.selfhead@1
+{
+  "schema": "afterlife.selfhead@1",
+  "self_id": "01H…",
+  "name": "Stoic Negotiator",
+  "description": "…",
+  "snapshot_tx": "&lt;tx_id&gt;",
+  "fork_of": { "source_self_id": "01H…", "source_head_tx": "&lt;tx_id&gt;" }
+}
+
+// Snapshot: afterlife.snapshot@1
+{
+  "schema": "afterlife.snapshot@1",
+  "self_id": "01H…",
+  "ideas": [{ "idea_id": "01H…", "tx_id": "&lt;tx_id&gt;" }],
+  "edges": [{ "from_idea_id": "01H…", "to_idea_id": "01H…", "type": "supports" }]
+}
+
+// Idea: afterlife.idea@1 (one tx per idea)
+{
+  "schema": "afterlife.idea@1",
+  "self_id": "01H…",
+  "idea_id": "01H…",
+  "kind": "heuristic",
+  "text": "Prefer X when Y because Z."
+}
+`.trim();
+---
+<Base title="Protocol" description="Afterlife schemas, entities, and how the static site indexes SelfHead on Arweave.">
+  <section class="hero">
+    <h1 style="font-size:34px;">Protocol</h1>
+    <p>
+      Afterlife stores a self as a public, forkable graph of ideas. Each idea is its own Arweave transaction.
+      A snapshot composes a graph at a point in time. A head points to the latest snapshot and provides a display name.
+    </p>
+  </section>
+  <div class="grid">
+    <section class="card half">
+      <h2>Entities</h2>
+      <ul class="muted" style="line-height:1.7;">
+        <li><code>Idea</code>: one idea per tx, typed by kind.</li>
+        <li><code>SelfSnapshot</code>: selects active idea txs + defines edges.</li>
+        <li><code>SelfHead</code>: latest pointer + display name (indexed by tags).</li>
+      </ul>
+    </section>
+    <section class="card half">
+      <h2>Indexing rule</h2>
+      <p class="muted" style="line-height:1.7;margin:0;">
+        The site queries Arweave GraphQL for <code>Entity=SelfHead</code> under <code>App-Name=ar//afterlife</code> and
+        <code>App-Tag=afterlife</code>. For each <code>Self-Id</code>, the highest block height wins.
+      </p>
+    </section>
+    <section class="card">
+      <h2>JSON schemas (v1)</h2>
+      <pre set:html={schemasHtml}></pre>
+    </section>
+  </div>
+</Base>
+

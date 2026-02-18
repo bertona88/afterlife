@@ -1,0 +1,15 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Self" description="Inspect a self by Self-Id.">
+  <section class="hero">
+    <h1 style="font-size:34px;">Self</h1>
+    <p>Open a self by ID: <code>/self?id=&lt;Self-Id&gt;</code></p>
+  </section>
+  <div id="status" class="muted" style="margin-top:16px;"></div>
+  <div id="content" class="grid" style="margin-top:12px;"></div>
+  <script>
+    import "../scripts/self.ts";
+  </script>
+</Base>
+

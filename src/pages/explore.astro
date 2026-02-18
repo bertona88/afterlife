@@ -1,0 +1,26 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Explore" description="Browse the latest published selfs (SelfHead) on Arweave.">
+  <section class="hero">
+    <h1 style="font-size:34px;">Explore</h1>
+    <p>
+      This list is built from Arweave GraphQL by querying <code>Entity=SelfHead</code> under the
+      <code>App-Name</code>/<code>App-Tag</code> namespace. No login. No backend.
+    </p>
+    <div class="row" style="margin-top:12px;">
+      <input id="gatewayOverride" class="input" placeholder="Gateway override (optional), e.g. https://arweave.net" />
+      <button id="saveGateway" class="btn">Use</button>
+      <button id="clearGateway" class="btn">Clear</button>
+    </div>
+    <div class="muted" style="margin-top:10px;font-size:13px;">
+      Gateway override affects outbound links and tx fetches (stored in <code>localStorage.afterlifeGatewayUrl</code>).
+    </div>
+  </section>
+  <div id="status" class="muted" style="margin-top:16px;"></div>
+  <div id="list" class="grid" style="margin-top:12px;"></div>
+  <script>
+    import "../scripts/explore.ts";
+  </script>
+</Base>
+

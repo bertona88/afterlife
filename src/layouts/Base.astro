@@ -1,0 +1,35 @@
+---
+import "../styles/global.css";
+const { title, description } = Astro.props;
+const pageTitle = title ? `${title} — ar// afterlife` : "ar// afterlife";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    {description ? <meta name="description" content={description} /> : null}
+    <meta name="theme-color" content="#07070b" />
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="nav">
+        <div class="nav-left">
+          <a class="brand" href="/">
+            <span>ar// afterlife</span>
+            <small>selves as forkable idea-graphs</small>
+          </a>
+        </div>
+        <nav class="nav-links">
+          <a class="pill" href="/explore">Explore</a>
+          <a class="pill" href="/publish">Publish</a>
+          <a class="pill" href="/about">Protocol</a>
+        </nav>
+      </header>
+      <main><slot /></main>
+    </div>
+  </body>
+</html>
+
