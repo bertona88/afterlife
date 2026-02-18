@@ -30,3 +30,9 @@ Generate `DEPLOY_KEY` locally:
 base64 -i wallet.json | pbcopy
 ```
 
+
+## Deploy config
+
+This repo deploys to Arweave via GitHub Actions. Configure:
+- GitHub Secret:  (base64-encoded Arweave wallet JSON; deployment-only wallet)
+- GitHub Variable:  (your ArNS name)
