@@ -70,7 +70,8 @@ function isZeroCost(winc) {
   return String(winc) === "0";
 }
 
-function pickPayloadVariants(originalBuffer) {
+function pickPayloadVariants(originalBuffer, opts = {}) {
+  const allowCompression = opts.allowCompression ?? true;
   const variants = [
     {
       encoding: "identity",
@@ -78,6 +79,10 @@ function pickPayloadVariants(originalBuffer) {
       buffer: originalBuffer
     }
   ];
+
+  if (!allowCompression) {
+    return variants;
+  }
 
   const gzip = gzipSync(originalBuffer);
   if (gzip.length < originalBuffer.length) {
@@ -194,7 +199,7 @@ async function run() {
   const original = await fs.readFile(absolutePath);
   const originalSha256 = sha256Hex(original);
 
-  const variants = pickPayloadVariants(original);
+  const variants = pickPayloadVariants(original, { allowCompression: compressIfNeeded });
   const maxBytes = env.maxFreeBytes;
 
   let selected = variants.find((variant) => variant.buffer.length <= maxBytes);
