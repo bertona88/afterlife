@@ -13,6 +13,7 @@ Use this skill when the user asks to upload or persist files on Arweave with Tur
 - Upload mode: `auto` (try free x402 raw path, fallback to signed data item).
 - Index mode: `tags-only`.
 - Paid fallback: disabled.
+- Compression: off by default (`--compress_if_needed false`), opt-in when needed to fit under free size.
 - Max free size: `ARWEAVE_MAX_FREE_BYTES` (default `102400`).
 
 ## Required Environment

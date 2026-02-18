@@ -185,7 +185,9 @@ async function run() {
     process.exit(1);
   }
 
-  const compressIfNeeded = coerceBoolean(args.compress_if_needed, true);
+  // Default to identity (no compression). Compression is opt-in because many users
+  // expect to fetch JSON as plain text without needing to decode Stored-Encoding.
+  const compressIfNeeded = coerceBoolean(args.compress_if_needed, false);
   const mode = args.mode ?? "auto";
   const userTags = parseJsonArg(args.tags, {});
 
