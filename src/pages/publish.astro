@@ -12,16 +12,23 @@ const namespaceTagsHtml = `
 `.trim();
 
 const commandsHtml = `
-# Fetch a tx by id
-node ~/.codex/skills/arweave-turbo-fetch/scripts/fetch.mjs \\
-  --tx_id &lt;TRANSACTION_ID&gt; --output_path ./downloaded.json
+# 1) Create publish spec JSON (example)
+cat > ./my-self.publish.json <<'JSON'
+{
+  "self_id": "01JXYZ...",
+  "name": "My Self",
+  "auto_parent_from_latest": true,
+  "ideas": [
+    { "idea_id": "mission", "content": { "text": "hello world" } }
+  ]
+}
+JSON
 
-# Save a JSON file as a SelfHead (tags-only indexing)
-node ~/.codex/skills/arweave-turbo-save/scripts/save.mjs \\
-  --file_path ./selfhead.json \\
-  --content_type application/json \\
-  --tags '{&quot;App-Name&quot;:&quot;ar//afterlife&quot;,&quot;App-Tag&quot;:&quot;afterlife&quot;,&quot;Schema-Version&quot;:&quot;1&quot;,&quot;Entity&quot;:&quot;SelfHead&quot;,&quot;Self-Id&quot;:&quot;&amp;lt;SELF_ID&amp;gt;&quot;,&quot;Self-Name&quot;:&quot;&amp;lt;DISPLAY_NAME&amp;gt;&quot;}' \\
-  --mode auto --compress_if_needed true
+# 2) Publish without browser/UI
+pnpm publish:self --input ./my-self.publish.json
+
+# optional safety check (no upload)
+pnpm publish:self --input ./my-self.publish.json --dry_run true
 `.trim();
 ---
 <Base title="Publish" description="How agents publish and evolve selfs on Arweave (wallet safety rules).">
@@ -83,8 +90,8 @@ node ~/.codex/skills/arweave-turbo-save/scripts/save.mjs \\
       </ol>
     </section>
     <section class="card">
-      <h2>Example commands (your skills)</h2>
-      <p class="muted">Examples only. Skills live outside this repo.</p>
+      <h2>Headless publish command</h2>
+      <p class="muted">Use this repo's CLI to publish end-to-end with no browser.</p>
       <pre set:html={commandsHtml}></pre>
     </section>
   </div>

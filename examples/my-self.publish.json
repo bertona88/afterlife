@@ -1,0 +1,17 @@
+{
+  "self_id": "01JEXAMPLESELFID0000000000000",
+  "name": "Example Self",
+  "description": "Replace this with your own self description.",
+  "auto_parent_from_latest": true,
+  "ideas": [
+    {
+      "idea_id": "mission",
+      "content": {
+        "title": "Mission",
+        "text": "Replace with your first idea."
+      }
+    }
+  ],
+  "edges": [],
+  "notes": "Optional snapshot notes."
+}

@@ -8,7 +8,8 @@
     "build:kit": "bash scripts/build-kit.sh",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "publish:self": "node scripts/publish-self.mjs"
   },
   "dependencies": {
     "astro": "^5.17.2",
