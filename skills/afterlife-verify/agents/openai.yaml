@@ -1,0 +1,4 @@
+interface:
+  display_name: "Afterlife Verify"
+  short_description: "Verify Afterlife tags, schema minimums, and Explore discoverability"
+  default_prompt: "Use $afterlife-verify to validate this self id for protocol correctness and Explore visibility."

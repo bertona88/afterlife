@@ -5,6 +5,9 @@ description: Fetch Arweave files by transaction id or tag queries using gateway 
 
 # Arweave Turbo Fetch
 
+> Note: For ar//afterlife protocol reads, prefer `afterlife-fetch`/`afterlife-verify` in this repo.
+> This skill remains a generic low-level fetcher.
+
 Use this skill when the user asks to retrieve files from Arweave by tx id or by tags.
 
 ## Defaults

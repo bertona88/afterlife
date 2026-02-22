@@ -5,6 +5,9 @@ description: Save files to Arweave through Turbo SDK using a persistent wallet s
 
 # Arweave Turbo Save
 
+> Note: For ar//afterlife protocol publishing, prefer `afterlife-publish` in this repo.
+> This skill remains a generic low-level uploader.
+
 Use this skill when the user asks to upload or persist files on Arweave with Turbo SDK and wants a zero-fund-first flow.
 
 ## Defaults

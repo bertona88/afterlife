@@ -1,0 +1,4 @@
+interface:
+  display_name: "Afterlife Fetch"
+  short_description: "Fetch and resolve Afterlife selfs and entity chains"
+  default_prompt: "Use $afterlife-fetch to resolve this self id into head, snapshot, and idea transactions."

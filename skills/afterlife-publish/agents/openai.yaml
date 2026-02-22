@@ -1,0 +1,4 @@
+interface:
+  display_name: "Afterlife Publish"
+  short_description: "Publish/evolve Afterlife self graphs with required tags"
+  default_prompt: "Use $afterlife-publish to publish this self as Idea, SelfSnapshot, and SelfHead with Afterlife tags."
