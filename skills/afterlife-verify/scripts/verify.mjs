@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+import { brotliDecompressSync, gunzipSync } from "node:zlib";
 
-const GRAPHQL_ENDPOINTS = ["https://arweave.net/graphql", "https://ar-io.dev/graphql"];
-const GATEWAYS = ["https://arweave.net", "https://ar-io.dev"];
+const GRAPHQL_ENDPOINTS = ["https://ardrive.net/graphql", "https://arweave.net/graphql", "https://ar-io.dev/graphql"];
+const GATEWAYS = ["https://ardrive.net", "https://arweave.net", "https://ar-io.dev"];
 const EDGE_TYPES = new Set(["supports", "contradicts", "refines", "depends-on", "derived-from"]);
 
 function parseArgs(argv) {
@@ -43,6 +44,17 @@ function hasAfterlifeNamespace(tags) {
   );
 }
 
+function getEncoding(tags) {
+  const tagMap = Array.isArray(tags) ? tagsToMap(tags) : tags;
+  return tagFirst(tagMap, "Content-Encoding") ?? tagFirst(tagMap, "Stored-Encoding") ?? "identity";
+}
+
+function decodePayload(buffer, encoding) {
+  if (encoding === "br") return brotliDecompressSync(buffer);
+  if (encoding === "gzip") return gunzipSync(buffer);
+  return buffer;
+}
+
 async function postGraphql(query, variables) {
   let lastErr;
   for (const endpoint of GRAPHQL_ENDPOINTS) {
@@ -64,14 +76,16 @@ async function postGraphql(query, variables) {
   throw lastErr instanceof Error ? lastErr : new Error("GraphQL failed");
 }
 
-async function fetchJsonByTxId(txId) {
+async function fetchJsonByTxId(txId, tags = []) {
   let lastErr;
+  const encoding = getEncoding(tags);
   for (const gw of GATEWAYS) {
     const url = `${gw}/${txId}`;
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`${url} HTTP ${res.status}`);
-      const text = await res.text();
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const text = decodePayload(buffer, encoding).toString("utf8");
       return JSON.parse(text);
     } catch (err) {
       lastErr = err;
@@ -121,6 +135,10 @@ query LatestHeadForSelf($tags: [TagFilter!]) {
   ];
   const data = await postGraphql(query, { tags });
   return data?.transactions?.edges?.[0]?.node || null;
+}
+
+async function fetchPayloadForMeta(meta) {
+  return fetchJsonByTxId(meta.id, meta.tags);
 }
 
 function validateHeadPayload(payload) {
@@ -174,7 +192,7 @@ async function verifyTx(txId) {
   const [meta] = await getTxMeta([txId]);
   if (!meta) return { ok: false, errors: [`Tx not found: ${txId}`], warnings: [] };
   const tags = tagsToMap(meta.tags);
-  const payload = await fetchJsonByTxId(txId);
+  const payload = await fetchPayloadForMeta(meta);
 
   const errors = [];
   const warnings = [];
@@ -224,7 +242,8 @@ async function verifySelf(selfId) {
   if (!head.ok) errors.push(...head.errors.map((e) => `Head: ${e}`));
   warnings.push(...head.warnings.map((w) => `Head: ${w}`));
 
-  const headPayload = await fetchJsonByTxId(latest.id);
+  const [headMeta] = await getTxMeta([latest.id]);
+  const headPayload = headMeta ? await fetchPayloadForMeta(headMeta) : await fetchJsonByTxId(latest.id);
   const snapshotTx = headPayload?.snapshot_tx;
   if (typeof snapshotTx !== "string") {
     errors.push("Head payload missing snapshot_tx");
@@ -235,7 +254,8 @@ async function verifySelf(selfId) {
   if (!snapshot.ok) errors.push(...snapshot.errors.map((e) => `Snapshot: ${e}`));
   warnings.push(...snapshot.warnings.map((w) => `Snapshot: ${w}`));
 
-  const snapshotPayload = await fetchJsonByTxId(snapshotTx);
+  const [snapshotMeta] = await getTxMeta([snapshotTx]);
+  const snapshotPayload = snapshotMeta ? await fetchPayloadForMeta(snapshotMeta) : await fetchJsonByTxId(snapshotTx);
   const ideaRefs = Array.isArray(snapshotPayload?.ideas) ? snapshotPayload.ideas : [];
   const ideaReports = [];
 

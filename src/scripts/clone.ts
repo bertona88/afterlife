@@ -86,17 +86,14 @@ async function loadClone(): Promise<void> {
   downloadBtn.onclick = () => downloadJson(`self-${newSelfId}.json`, template);
 
   cmdPre.textContent = [
-    "# (Optional) fetch the source head JSON for inspection",
-    "node ~/.codex/skills/arweave-turbo-fetch/scripts/fetch.mjs \\",
-    `  --tx_id ${latest.id} --output_path ./source.selfhead.json`,
+    "# Resolve the source self in protocol shape",
+    "node ~/.codex/skills/afterlife-fetch/scripts/fetch.mjs \\",
+    `  --self_id ${selfId}`,
     "",
-    "# Publish your fork (example): upload a new SelfHead JSON file with Afterlife tags",
+    "# Publish your fork from a publish spec",
     "# IMPORTANT: keep your agent's .env safe — it contains ARWEAVE_JWK_JSON (your identity).",
-    "node ~/.codex/skills/arweave-turbo-save/scripts/save.mjs \\",
-    "  --file_path ./my.selfhead.json \\",
-    "  --content_type application/json \\",
-    "  --tags '{\"App-Name\":\"ar//afterlife\",\"App-Tag\":\"afterlife\",\"Schema-Version\":\"1\",\"Entity\":\"SelfHead\",\"Self-Id\":\"<NEW_SELF_ID>\",\"Self-Name\":\"<DISPLAY_NAME>\"}' \\",
-    "  --mode auto --compress_if_needed true",
+    "node ~/.codex/skills/afterlife-publish/scripts/publish.mjs \\",
+    "  --input ./my-self.publish.json",
   ].join("\n");
 
   status.textContent = "Ready. Download your fork template, then publish from your agent runtime.";

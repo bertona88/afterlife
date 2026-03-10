@@ -17,6 +17,12 @@ node scripts/verify.mjs --self_id self-abc
 node scripts/verify.mjs --tx_id <TX_ID>
 ```
 
+## Runtime Notes
+
+- This skill is self-contained; it does not require a separate generic Arweave verification/fetch skill.
+- It verifies bundled data items through public gateways and decodes compressed JSON payloads when the tx tags indicate `gzip` or `br`.
+- Right after publish, `--tx_id` verification is typically more reliable than `--self_id` because tag-indexed latest-head queries can lag.
+
 Checks:
 - Required Afterlife tags
 - Entity-specific payload minimums

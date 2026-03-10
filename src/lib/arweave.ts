@@ -20,8 +20,12 @@ export type ArweaveTxNode = {
 export type ArweaveTxEdge = { cursor: string; node: ArweaveTxNode };
 type GraphqlResponse<T> = { data?: T; errors?: Array<{ message: string }> };
 
-const DEFAULT_GRAPHQL_ENDPOINTS = ["https://arweave.net/graphql", "https://ar-io.dev/graphql"];
-const DEFAULT_GATEWAYS = ["https://arweave.net", "https://ar-io.dev"];
+const DEFAULT_GRAPHQL_ENDPOINTS = [
+  "https://ardrive.net/graphql",
+  "https://arweave.net/graphql",
+  "https://ar-io.dev/graphql",
+];
+const DEFAULT_GATEWAYS = ["https://ardrive.net", "https://arweave.net", "https://ar-io.dev"];
 
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
@@ -168,4 +172,3 @@ export function groupLatestHeadsBySelfId(edges: ArweaveTxEdge[]): ArweaveTxNode[
   }
   return [...byId.values()].sort((a, b) => (b.block?.height ?? -1) - (a.block?.height ?? -1));
 }
-

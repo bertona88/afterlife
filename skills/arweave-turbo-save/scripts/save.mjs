@@ -118,12 +118,10 @@ function chunkOrFail(buffer, maxBytes) {
 async function uploadRawFree({ turbo, payload, contentType, tags }) {
   return turbo.uploadRawX402Data({
     data: payload,
-    dataItemOpts: {
-      tags: [
-        { name: "Content-Type", value: contentType },
-        ...tags
-      ]
-    }
+    tags: [
+      { name: "Content-Type", value: contentType },
+      ...tags
+    ]
   });
 }
 

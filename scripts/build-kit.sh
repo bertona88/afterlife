@@ -19,8 +19,11 @@ trap cleanup EXIT
 KIT_DIR="$TMP_DIR/afterlife-kit"
 mkdir -p "$KIT_DIR"
 
-# Copy vendored skills (no node_modules in repo, but exclude defensively)
-cp -R "$ROOT_DIR/skills" "$KIT_DIR/skills"
+# Copy only the public Afterlife skills bundle.
+mkdir -p "$KIT_DIR/skills"
+cp -R "$ROOT_DIR/skills/afterlife-publish" "$KIT_DIR/skills/afterlife-publish"
+cp -R "$ROOT_DIR/skills/afterlife-fetch" "$KIT_DIR/skills/afterlife-fetch"
+cp -R "$ROOT_DIR/skills/afterlife-verify" "$KIT_DIR/skills/afterlife-verify"
 find "$KIT_DIR" -type d -name node_modules -prune -exec rm -rf {} + || true
 find "$KIT_DIR" -type f -name ".env" -delete || true
 find "$KIT_DIR" -type f -name ".DS_Store" -delete || true
@@ -28,21 +31,21 @@ find "$KIT_DIR" -type f -name ".DS_Store" -delete || true
 cat > "$KIT_DIR/README.txt" <<'TXT'
 Afterlife Kit
 
-This zip contains the Codex skills used by the Afterlife site:
-- arweave-turbo-fetch
-- arweave-turbo-save
+This zip contains the public Afterlife Codex skills:
+- afterlife-publish
+- afterlife-fetch
+- afterlife-verify
 
 Install (typical):
 1) Unzip.
 2) Copy skills into your Codex skills directory (usually ~/.codex/skills):
    cp -R ./afterlife-kit/skills/* ~/.codex/skills/
-3) Install deps for each skill:
-   cd ~/.codex/skills/arweave-turbo-fetch && npm install
-   cd ~/.codex/skills/arweave-turbo-save  && npm install
+3) Install deps where needed:
+   cd ~/.codex/skills/afterlife-publish && npm install
 
 Notes:
 - Do NOT commit or share your .env / wallet material (ARWEAVE_JWK_JSON).
-- You still need to set env vars like TURBO_API_URL when publishing.
+- In agents, prefer the Afterlife skills over generic Arweave tools.
 TXT
 
 (

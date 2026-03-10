@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+import { brotliDecompressSync, gunzipSync } from "node:zlib";
 
-const GRAPHQL_ENDPOINTS = ["https://arweave.net/graphql", "https://ar-io.dev/graphql"];
-const GATEWAYS = ["https://arweave.net", "https://ar-io.dev"];
+const GRAPHQL_ENDPOINTS = ["https://ardrive.net/graphql", "https://arweave.net/graphql", "https://ar-io.dev/graphql"];
+const GATEWAYS = ["https://ardrive.net", "https://arweave.net", "https://ar-io.dev"];
 
 function parseArgs(argv) {
   const args = {};
@@ -50,6 +51,17 @@ function tagCheck(tags) {
   return { ...checks, discoverable: checks.appName && checks.appTag && checks.schemaVersion && !!checks.entity };
 }
 
+function getEncoding(tags) {
+  const tagMap = Array.isArray(tags) ? tagsToMap(tags) : tags;
+  return tagFirst(tagMap, "Content-Encoding") ?? tagFirst(tagMap, "Stored-Encoding") ?? "identity";
+}
+
+function decodePayload(buffer, encoding) {
+  if (encoding === "br") return brotliDecompressSync(buffer);
+  if (encoding === "gzip") return gunzipSync(buffer);
+  return buffer;
+}
+
 async function postGraphql(query, variables) {
   let lastErr;
   for (const endpoint of GRAPHQL_ENDPOINTS) {
@@ -71,14 +83,16 @@ async function postGraphql(query, variables) {
   throw lastErr instanceof Error ? lastErr : new Error("GraphQL failed");
 }
 
-async function fetchJsonByTxId(txId) {
+async function fetchJsonByTxId(txId, tags = []) {
   let lastErr;
+  const encoding = getEncoding(tags);
   for (const gw of GATEWAYS) {
     const url = `${gw}/${txId}`;
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`${url} HTTP ${res.status}`);
-      const text = await res.text();
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const text = decodePayload(buffer, encoding).toString("utf8");
       return JSON.parse(text);
     } catch (err) {
       lastErr = err;
@@ -132,6 +146,10 @@ query LatestHeadForSelf($tags: [TagFilter!]) {
   return data?.transactions?.edges?.[0]?.node || null;
 }
 
+async function fetchPayloadForMeta(meta) {
+  return fetchJsonByTxId(meta.id, meta.tags);
+}
+
 async function run() {
   const args = parseArgs(process.argv);
   const selfId = args.self_id;
@@ -146,7 +164,7 @@ async function run() {
       process.stdout.write(`${JSON.stringify({ ok: true, found: false, tx_id: txId }, null, 2)}\n`);
       return;
     }
-    const payload = await fetchJsonByTxId(txId);
+    const payload = await fetchPayloadForMeta(meta);
     const tags = tagsToMap(meta.tags);
     process.stdout.write(
       `${JSON.stringify(
@@ -192,9 +210,10 @@ async function run() {
   }
 
   const headTags = tagsToMap(headMeta.tags);
-  const headJson = await fetchJsonByTxId(headMeta.id);
+  const headJson = await fetchPayloadForMeta(headMeta);
   const snapshotTx = typeof headJson?.snapshot_tx === "string" ? headJson.snapshot_tx : null;
-  const snapshotJson = snapshotTx ? await fetchJsonByTxId(snapshotTx) : null;
+  const [snapshotMeta] = snapshotTx ? await getTxMeta([snapshotTx]) : [];
+  const snapshotJson = snapshotMeta ? await fetchPayloadForMeta(snapshotMeta) : null;
 
   let ideas = [];
   if (includeIdeas && Array.isArray(snapshotJson?.ideas)) {
@@ -208,7 +227,7 @@ async function run() {
         const meta = byId.get(item.tx_id) || null;
         let ideaPayload = null;
         try {
-          ideaPayload = await fetchJsonByTxId(item.tx_id);
+          ideaPayload = meta ? await fetchPayloadForMeta(meta) : await fetchJsonByTxId(item.tx_id);
         } catch {
           ideaPayload = null;
         }

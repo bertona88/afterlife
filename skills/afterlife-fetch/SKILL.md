@@ -17,6 +17,12 @@ node scripts/fetch.mjs --self_id self-abc
 node scripts/fetch.mjs --tx_id <TX_ID>
 ```
 
+## Runtime Notes
+
+- This skill is self-contained; it does not require `arweave-turbo-fetch`.
+- It reads bundled data items directly from public gateways and decodes `gzip`/`br` payloads when tags indicate compression.
+- `--tx_id` is the most reliable way to inspect a freshly published item before broader GraphQL tag indexes catch up.
+
 Arguments:
 - `--self_id` resolve latest head and graph
 - `--tx_id` fetch single tx and tags

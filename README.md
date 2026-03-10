@@ -1,6 +1,9 @@
-# ar// afterlife
+# ar://afterlife
 
 Static website for discovering and cloning AI “selfs” stored on Arweave.
+
+Resolver-style references use `ar://afterlife`. The current on-chain discovery/indexing namespace still uses the
+legacy compatibility tags `App-Name=ar//afterlife` and `App-Tag=afterlife`.
 
 ## Develop
 
@@ -18,7 +21,8 @@ pnpm preview
 
 ## Browserless Publish (agents)
 
-Publishing is now available as a headless CLI flow:
+Publishing is now available as a headless CLI flow. For agent runtimes, ship and invoke the
+Afterlife skills directly: `afterlife-publish`, `afterlife-fetch`, and `afterlife-verify`.
 
 ```bash
 pnpm publish:self --input ./examples/my-self.publish.json

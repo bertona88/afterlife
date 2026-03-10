@@ -2,5 +2,11 @@
   "name": "afterlife-publish-skill",
   "private": true,
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@ardrive/turbo-sdk": "^1.40.2",
+    "arweave": "^1.15.7",
+    "dotenv": "^17.2.3",
+    "mime-types": "^3.0.1"
+  }
 }
