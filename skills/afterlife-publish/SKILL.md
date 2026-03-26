@@ -41,6 +41,7 @@ Arguments:
 ## Runtime Notes
 
 - This skill performs the Turbo upload flow directly; no separate generic Arweave skill is required.
+- Free x402 uploads default to `TURBO_TOKEN=base-usdc`; override only if you intentionally want a different Turbo token.
 - If `ARWEAVE_JWK_JSON` is missing, it generates a wallet once and writes it to the selected `.env`.
 - Upload policy is free-first only; paid fallback is refused.
 

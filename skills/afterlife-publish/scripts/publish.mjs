@@ -179,7 +179,7 @@ function getEnv(config = {}) {
   const turboApiUrl = (process.env.TURBO_API_URL ?? "").trim();
   const turboUploadUrl = (process.env.TURBO_UPLOAD_URL ?? "").trim();
   const turboPaymentUrl = (process.env.TURBO_PAYMENT_URL ?? "").trim();
-  const turboToken = (process.env.TURBO_TOKEN ?? "").trim() || "arweave";
+  const turboToken = (process.env.TURBO_TOKEN ?? "").trim() || "base-usdc";
 
   const defaultUploadUrl = "https://upload.ardrive.io";
   const defaultPaymentUrl = "https://payment.ardrive.io";
